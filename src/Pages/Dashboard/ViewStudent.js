@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import Paginate from "./Paginate";
 
 const ViewStudent = () => {
   const [name, setName] = useState("");
@@ -11,12 +12,10 @@ const ViewStudent = () => {
   const [divison, setDivison] = useState("");
   const [allStudents, setAllStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  // const { data, isLoading, refetch } = useQuery("allStudents", () =>
-  //   fetch(`http://localhost:5000/allStudents`)
-  //     .then((res) => res.json())
-  //     .then((data) => data)
-  // );
+  const [pageSize, setPageSize] = useState(5);
+  const [pages, setPages] = useState(5);
+  const [filteredIndeces, setFilteredIndeces] = useState([0, 0]);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const fetchAll = () => {
     setIsLoading(true);
@@ -29,6 +28,14 @@ const ViewStudent = () => {
   useEffect(() => {
     fetchAll();
   }, []);
+
+  useEffect(() => {
+    const pages = Math.ceil(allStudents.length / pageSize);
+    setPages(pages);
+    const startIndex = currentPage * pageSize;
+    const endIndex = currentPage * pageSize + pageSize;
+    setFilteredIndeces([startIndex, endIndex]);
+  }, [allStudents, currentPage, pageSize]);
 
   const handleName = (e) => {
     setName(e.target.value);
@@ -59,7 +66,7 @@ const ViewStudent = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setAllStudents(data)
+        setAllStudents(data);
       });
   };
 
@@ -112,8 +119,11 @@ const ViewStudent = () => {
             name="school"
           >
             <option value="select">School</option>
-            <option value="s1">s1</option>
-            <option value="s2">s2</option>
+            <option value="Delhi School">Delhi School</option>
+                <option value="Kolkata School">Kolkata School</option>
+                <option value="Mumbai School">Mumbai School</option>
+                <option value="Chennai School">Chennai School</option>
+                <option value="Model School">Model School</option>
           </select>
 
           <select
@@ -122,8 +132,16 @@ const ViewStudent = () => {
             onChange={handleClasses}
           >
             <option value="select">Class</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
+            <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
           </select>
 
           <select
@@ -132,8 +150,12 @@ const ViewStudent = () => {
             onChange={handleDivison}
           >
             <option value="select">Division</option>
-            <option value="Dhaka">Dhaka</option>
-            <option value="Khulna">Khulna</option>
+            <option value="A+">A+</option>
+                <option value="A">A</option>
+                <option value="A-">A-</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="F">F</option>
           </select>
           <button className="bg-red-800 text-white px-4 py-2 rounded">
             Search
@@ -158,29 +180,41 @@ const ViewStudent = () => {
               </tr>
             </thead>
             <tbody className="font-main text-base border-x-2 border-b-2">
-              {allStudents.map((student, index) => (
-                <tr className="hover:bg-[#f5d7db] border" key={student._id}>
-                  <td className="px-6 py-4 border">{index + 1}</td>
-                  <td className="px-6 py-4 border">{student.name}</td>
-                  <td className="px-6 py-4 border">{student.age}</td>
-                  <td className="px-6 py-4 border">{student.school}</td>
-                  <td className="px-6 py-4 border">{student.classes}</td>
-                  <td className="px-6 py-4 border">{student.divison}</td>
-                  <td className="px-6 py-4 border">{student.status}</td>
-                  <td className="px-6 py-4 border text-blue-700 underline cursor-pointer">
-                    <Link to={"/dashboard/" + student._id}>Edit</Link>
-                  </td>
-                  <td
-                    className="px-6 py-4 border text-blue-700 underline cursor-pointer"
-                    onClick={() => handleDelete(student._id)}
-                  >
-                    Delete
-                  </td>
-                </tr>
-              ))}
+              {allStudents
+                .slice(filteredIndeces[0], filteredIndeces[1])
+                .map((student, index) => (
+                  <tr className="hover:bg-[#f5d7db] border" key={student._id}>
+                    <td className="px-6 py-4 border">{index + 1}</td>
+                    <td className="px-6 py-4 border">{student.name}</td>
+                    <td className="px-6 py-4 border">{student.age}</td>
+                    <td className="px-6 py-4 border">{student.school}</td>
+                    <td className="px-6 py-4 border">{student.classes}</td>
+                    <td className="px-6 py-4 border">{student.divison}</td>
+                    <td className="px-6 py-4 border">{student.status}</td>
+                    <td className="px-6 py-4 border text-blue-700 underline cursor-pointer">
+                      <Link to={"/dashboard/" + student._id}>Edit</Link>
+                    </td>
+                    <td
+                      className="px-6 py-4 border text-blue-700 underline cursor-pointer"
+                      onClick={() => handleDelete(student._id)}
+                    >
+                      Delete
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="flex justify-end mt-4">
+        <Paginate
+          data={{
+            pages,
+            setPages,
+            currentPage,
+            setCurrentPage,
+          }}
+        />
       </div>
     </div>
   );

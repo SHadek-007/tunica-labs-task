@@ -42,6 +42,7 @@ const AddStudent = () => {
       .then((res) => res.json())
       .then((data) => {
         toast("Add Student Successfully");
+        e.target.reset();
       });
   };
 
@@ -59,6 +60,7 @@ const AddStudent = () => {
                 name="name"
                 placeholder="Name"
                 onChange={handleName}
+                required
               />
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-x-[113px] mt-5">
@@ -69,6 +71,7 @@ const AddStudent = () => {
                 name="age"
                 placeholder="Age"
                 onChange={handleAge}
+                required
               />
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-x-10 mt-5">
@@ -79,6 +82,7 @@ const AddStudent = () => {
                 name="date"
                 placeholder="Name"
                 onChange={handleDate}
+                required
               />
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-x-[92px] mt-5">
@@ -87,10 +91,14 @@ const AddStudent = () => {
                 onChange={handleSchool}
                 className="border w-96 py-3 rounded outline-0 px-5 bg-gray-200"
                 name="school"
+                required
               >
                 <option value="select">Select</option>
-                <option value="s1">s1</option>
-                <option value="s2">s2</option>
+                <option value="Delhi School">Delhi School</option>
+                <option value="Kolkata School">Kolkata School</option>
+                <option value="Mumbai School">Mumbai School</option>
+                <option value="Chennai School">Chennai School</option>
+                <option value="Model School">Model School</option>
               </select>
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-x-[105px] mt-5">
@@ -99,10 +107,19 @@ const AddStudent = () => {
                 className="border w-96 py-3 rounded outline-0 px-5 bg-gray-200"
                 name="classes"
                 onChange={handleClasses}
+                required
               >
                 <option value="select">Select</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
               </select>
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-x-[88px] mt-5">
@@ -111,10 +128,15 @@ const AddStudent = () => {
                 className="border w-96 py-3 rounded outline-0 px-5 bg-gray-200"
                 name="divison"
                 onChange={handleDivison}
+                required
               >
                 <option value="select">Select</option>
-                <option value="Dhaka">Dhaka</option>
-                <option value="Khulna">Khulna</option>
+                <option value="A+">A+</option>
+                <option value="A">A</option>
+                <option value="A-">A-</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="F">F</option>
               </select>
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-x-[88px] mt-5">
