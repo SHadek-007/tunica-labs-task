@@ -57,9 +57,19 @@ const SignIn = () => {
             className={agree ? "text-black" : "text-gray-500"}
             onClick={() => setAgree(!agree)}
           >
-            <div className="flex items-center mt-3 gap-3">
-              <input type="checkbox" className="cursor-pointer" />
-              <label htmlFor="">I agree to the Terms Of Services</label>
+            <div className={`flex items-center mt-3 gap-3`}>
+              <input
+                id="agree-check"
+                type="checkbox"
+                className="cursor-pointer"
+                onChange={e => setAgree(e.target.checked)}
+              />
+                <label
+                  htmlFor="agree-check"
+                  className={agree ? "text-black" : "text-gray-500"}
+                >
+                  I agree to the Terms Of Services
+                </label>
             </div>
           </div>
           <input

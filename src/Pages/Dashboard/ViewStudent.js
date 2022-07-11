@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Paginate from "./Paginate";
+import { utils, writeFile } from "xlsx";
+import { HiDownload } from "react-icons/hi";
 
 const ViewStudent = () => {
   const [name, setName] = useState("");
@@ -16,6 +17,15 @@ const ViewStudent = () => {
   const [pages, setPages] = useState(5);
   const [filteredIndeces, setFilteredIndeces] = useState([0, 0]);
   const [currentPage, setCurrentPage] = useState(0);
+
+  const convertJsonToExcel = () => {
+    const workSheet = utils.json_to_sheet(allStudents);
+    const workBook = utils.book_new();
+
+    utils.book_append_sheet(workBook, workSheet, "students");
+    // Download file
+    writeFile(workBook, "All_Students.xlsx");
+  };
 
   const fetchAll = () => {
     setIsLoading(true);
@@ -40,20 +50,24 @@ const ViewStudent = () => {
   const handleName = (e) => {
     setName(e.target.value);
   };
+
   const handleAge = (e) => {
     setAge(e.target.value);
   };
+
   const handleSchool = (e) => {
     setSchool(e.target.value);
   };
+
   const handleClasses = (e) => {
     setClasses(e.target.value);
   };
+
   const handleDivison = (e) => {
     setDivison(e.target.value);
   };
+
   const handleForm = (e) => {
-    console.log("working");
     e.preventDefault();
     const students = { name, age, school, classes, divison };
     fetch("http://localhost:5000/students/query", {
@@ -65,8 +79,8 @@ const ViewStudent = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setAllStudents(data);
+        setCurrentPage(0);
       });
   };
 
@@ -110,6 +124,7 @@ const ViewStudent = () => {
             type="number"
             name="age"
             placeholder="Age"
+            min={0}
             onChange={handleAge}
           />
 
@@ -120,10 +135,10 @@ const ViewStudent = () => {
           >
             <option value="select">School</option>
             <option value="Delhi School">Delhi School</option>
-                <option value="Kolkata School">Kolkata School</option>
-                <option value="Mumbai School">Mumbai School</option>
-                <option value="Chennai School">Chennai School</option>
-                <option value="Model School">Model School</option>
+            <option value="Kolkata School">Kolkata School</option>
+            <option value="Mumbai School">Mumbai School</option>
+            <option value="Chennai School">Chennai School</option>
+            <option value="Model School">Model School</option>
           </select>
 
           <select
@@ -133,15 +148,15 @@ const ViewStudent = () => {
           >
             <option value="select">Class</option>
             <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
           </select>
 
           <select
@@ -151,11 +166,11 @@ const ViewStudent = () => {
           >
             <option value="select">Division</option>
             <option value="A+">A+</option>
-                <option value="A">A</option>
-                <option value="A-">A-</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="F">F</option>
+            <option value="A">A</option>
+            <option value="A-">A-</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="F">F</option>
           </select>
           <button className="bg-red-800 text-white px-4 py-2 rounded">
             Search
@@ -206,7 +221,13 @@ const ViewStudent = () => {
           </table>
         </div>
       </div>
-      <div className="flex justify-end mt-4">
+      <div className="flex justify-between mt-4">
+        <button
+          className="bg-red-800 text-white px-4 py-2 rounded flex items-center gap-2"
+          onClick={convertJsonToExcel}
+        >
+          Download Excel <HiDownload />
+        </button>
         <Paginate
           data={{
             pages,
