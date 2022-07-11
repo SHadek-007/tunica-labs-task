@@ -11,8 +11,6 @@ const AddStudent = () => {
   const [divison, setDivison] = useState("");
   const [status, setStatus] = useState("Active");
 
-  // console.log(name,age,date,school,classes,divison,status);
-
   const handleName = (e) => {
     setName(e.target.value);
   };

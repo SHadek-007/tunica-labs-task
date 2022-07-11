@@ -1,24 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const ViewStudent = () => {
-  const {
-    data: allStudents,
-    isLoading,
-    refetch,
-  } = useQuery("allStudents", () =>
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [school, setSchool] = useState("");
+  const [classes, setClasses] = useState("");
+  const [divison, setDivison] = useState("");
+  const [allStudents, setAllStudents] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // const { data, isLoading, refetch } = useQuery("allStudents", () =>
+  //   fetch(`http://localhost:5000/allStudents`)
+  //     .then((res) => res.json())
+  //     .then((data) => data)
+  // );
+
+  const fetchAll = () => {
+    setIsLoading(true);
     fetch(`http://localhost:5000/allStudents`)
       .then((res) => res.json())
-      .then((data) => data)
-  );
+      .then((data) => setAllStudents(data))
+      .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    fetchAll();
+  }, []);
+
+  const handleName = (e) => {
+    setName(e.target.value);
+  };
+  const handleAge = (e) => {
+    setAge(e.target.value);
+  };
+  const handleSchool = (e) => {
+    setSchool(e.target.value);
+  };
+  const handleClasses = (e) => {
+    setClasses(e.target.value);
+  };
+  const handleDivison = (e) => {
+    setDivison(e.target.value);
+  };
+  const handleForm = (e) => {
+    console.log("working");
+    e.preventDefault();
+    const students = { name, age, school, classes, divison };
+    fetch("http://localhost:5000/students/query", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(students),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setAllStudents(data)
+      });
+  };
 
   const handleDelete = (id) => {
     fetch(`http://localhost:5000/student/${id}`, { method: "DELETE" }).then(
       (res) => {
         toast("Successfully deleted");
-        refetch();
+        // refetch();
+        fetchAll();
       }
     );
   };
@@ -34,6 +84,62 @@ const ViewStudent = () => {
   return (
     <div>
       <h1 className="text-red-500 mb-8 text-xl font-medium">View Student</h1>
+
+      <div className="mb-10">
+        <form
+          onSubmit={handleForm}
+          className="grid grid-cols-1 lg:grid-cols-6 gap-5"
+        >
+          <input
+            className="border max-w-sm py-3 rounded outline-0 px-5 bg-gray-200"
+            type="text"
+            name="name"
+            placeholder="Name"
+            onChange={handleName}
+          />
+
+          <input
+            className="border max-w-sm py-3 rounded outline-0 px-5 bg-gray-200"
+            type="number"
+            name="age"
+            placeholder="Age"
+            onChange={handleAge}
+          />
+
+          <select
+            onChange={handleSchool}
+            className="border max-w-sm py-3 rounded outline-0 px-5 bg-gray-200"
+            name="school"
+          >
+            <option value="select">School</option>
+            <option value="s1">s1</option>
+            <option value="s2">s2</option>
+          </select>
+
+          <select
+            className="border max-w-sm py-3 rounded outline-0 px-5 bg-gray-200"
+            name="classes"
+            onChange={handleClasses}
+          >
+            <option value="select">Class</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+
+          <select
+            className="border max-w-sm py-3 rounded outline-0 px-5 bg-gray-200"
+            name="divison"
+            onChange={handleDivison}
+          >
+            <option value="select">Division</option>
+            <option value="Dhaka">Dhaka</option>
+            <option value="Khulna">Khulna</option>
+          </select>
+          <button className="bg-red-800 text-white px-4 py-2 rounded">
+            Search
+          </button>
+        </form>
+      </div>
 
       <div>
         <div className=" overflow-x-auto rounded-sm">
