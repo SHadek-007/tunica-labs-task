@@ -1,8 +1,10 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const AddStudent = () => {
+const EditStudent = () => {
+  const { id } = useParams();
+  // const [studentDetails, setStudentDetails] = useState({});
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [date, setDate] = useState("");
@@ -11,7 +13,21 @@ const AddStudent = () => {
   const [divison, setDivison] = useState("");
   const [status, setStatus] = useState("Active");
 
-  // console.log(name,age,date,school,classes,divison,status);
+  useEffect(() => {
+    fetch(`http://localhost:5000/student/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setName(data.name)
+        setAge(data.age)
+        setDate(data.date)
+        setSchool(data.school)
+        setClasses(data.classes)
+        setDivison(data.divison)
+        console.log(data.divison);
+        setStatus(data.status)
+        console.log(data.status);
+      });
+  }, []);
 
   const handleName = (e) => {
     setName(e.target.value);
@@ -31,11 +47,11 @@ const AddStudent = () => {
   const handleDivison = (e) => {
     setDivison(e.target.value);
   };
-  const handleForm = (e) =>{
+  const handleForm = (e) => {
     e.preventDefault();
     const students = { name, age, date, school, classes, divison, status };
     fetch("http://localhost:5000/students", {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "content-type": "application/json",
       },
@@ -61,7 +77,8 @@ const AddStudent = () => {
                 name="name"
                 placeholder="Name"
                 onChange={handleName}
-              />
+                value={name}
+                />
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-x-[113px] mt-5">
               <label>Age</label>
@@ -71,7 +88,8 @@ const AddStudent = () => {
                 name="age"
                 placeholder="Age"
                 onChange={handleAge}
-              />
+                value={age}
+                />
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-x-10 mt-5">
               <label>Date Of Birth</label>
@@ -81,7 +99,8 @@ const AddStudent = () => {
                 name="date"
                 placeholder="Name"
                 onChange={handleDate}
-              />
+                value={date}
+                />
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-x-[92px] mt-5">
               <label>School</label>
@@ -89,8 +108,10 @@ const AddStudent = () => {
                 onChange={handleSchool}
                 className="border w-96 py-3 rounded outline-0 px-5 bg-gray-200"
                 name="school"
-              >
+                value={school}
+                >
                 <option value="select">Select</option>
+                  
                 <option value="s1">s1</option>
                 <option value="s2">s2</option>
               </select>
@@ -101,6 +122,7 @@ const AddStudent = () => {
                 className="border w-96 py-3 rounded outline-0 px-5 bg-gray-200"
                 name="classes"
                 onChange={handleClasses}
+                value={classes}
               >
                 <option value="select">Select</option>
                 <option value="3">3</option>
@@ -113,7 +135,8 @@ const AddStudent = () => {
                 className="border w-96 py-3 rounded outline-0 px-5 bg-gray-200"
                 name="divison"
                 onChange={handleDivison}
-              >
+                value={divison}
+                >
                 <option value="select">Select</option>
                 <option value="Dhaka">Dhaka</option>
                 <option value="Khulna">Khulna</option>
@@ -129,7 +152,8 @@ const AddStudent = () => {
                   type="radio"
                   name="status"
                   value="Active"
-                />
+                  checked={status === "Active"}
+                  />
                 <label htmlFor="status">Active</label>
               </div>
               <div className="flex gap-x-5">
@@ -140,6 +164,7 @@ const AddStudent = () => {
                   type="radio"
                   name="status"
                   value="Invoice"
+                  checked={status === "Invoice"}
                 />
                 <label htmlFor="status">Invoice</label>
               </div>
@@ -157,4 +182,4 @@ const AddStudent = () => {
   );
 };
 
-export default AddStudent;
+export default EditStudent;

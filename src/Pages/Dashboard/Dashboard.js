@@ -40,11 +40,11 @@ const Dashboard = () => {
         <ul className="pt-6">
             <li className='flex items-center gap-4'>
                 <Link to={'/dashboard'}><BsPeople className='text-xl'/></Link>
-                <Link className={`${!open && "hidden duration-300"}`} to={'/dashboard'}>View Student</Link>
+                <Link className={`${!open && "duration-300 scale-0"}`} to={'/dashboard'}>View Student</Link>
             </li>
             <li className='flex items-center gap-4 mt-5 border-b-2'>
                 <Link to={'/dashboard/addStudent'}><AiOutlineUserAdd className='text-xl'/></Link>
-                <Link className={`${!open && "hidden duration-300 "}`} to={'/dashboard/addStudent'}>Add Student</Link>
+                <Link className={`${!open && "duration-300 scale-0"}`} to={'/dashboard/addStudent'}>Add Student</Link>
             </li>
         </ul>
       </div>

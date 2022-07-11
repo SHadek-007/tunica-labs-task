@@ -4,9 +4,10 @@ import auth from "../../firebase.init";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 
 const SignUp = () => {
+  let [errorElement, setErrorElement] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [agree, setAgree] = useState(false);
 
   useEffect(() => {
@@ -27,16 +28,15 @@ const SignUp = () => {
         <div className="w-16 h-16 border-b-2 border-gray-900 rounded-full animate-spin"></div>
       </div>
     );
-  };
+  }
 
-  let errorElement;
   if (error) {
-    errorElement = (
+    setErrorElement(
       <div>
         <p className="text-danger">Error: {error?.message} </p>
       </div>
     );
-  };
+  }
 
   const handleEmailBlur = (e) => {
     setEmail(e.target.value);
@@ -44,14 +44,23 @@ const SignUp = () => {
   const handlePasswordBlur = (e) => {
     setPassword(e.target.value);
   };
-  // const handleConfirmPasswordBlur = (e) =>{
-  //     setConfirmPassword(e.target.value);
-  // };
+  const handleConfirmPasswordBlur = (e) => {
+    setConfirmPassword(e.target.value);
+  };
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    await createUserWithEmailAndPassword(email, password);
-    // await updatePassword({ confirmPassword });
+    if (password == confirmPassword) {
+      await createUserWithEmailAndPassword(email, password);
+    }
+    else {
+      setErrorElement(
+        <div>
+          <p className="text-danger">Error: Password not matched </p>
+        </div>
+      );
+    }
   };
+
   return (
     <div className="py-20 bg-red-900 px-5 md:px-20 flex justify-center items-center">
       <div className="w-96 bg-white p-5 rounded-xl">
@@ -80,14 +89,23 @@ const SignUp = () => {
             type="password"
             name="confirmPassword"
             placeholder="Confirm Password"
+            onBlur={handleConfirmPasswordBlur}
+            required
           />
-          <div
-            className={agree ? "text-black" : "text-gray-500"}
-            onClick={() => setAgree(!agree)}
-          >
-            <div className="flex items-center mt-3 gap-3">
-              <input type="checkbox" className="cursor-pointer" />
-              <label htmlFor="">I agree to the Terms Of Services</label>
+          <div>
+            <div className={`flex items-center mt-3 gap-3`}>
+              <input
+                id="agree-check"
+                type="checkbox"
+                className="cursor-pointer"
+                onChange={e => setAgree(e.target.checked)}
+              />
+                <label
+                  htmlFor="agree-check"
+                  className={agree ? "text-black" : "text-gray-500"}
+                >
+                  I agree to the Terms Of Services
+                </label>
             </div>
           </div>
           <input

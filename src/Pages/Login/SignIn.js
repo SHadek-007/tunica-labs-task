@@ -70,6 +70,7 @@ const SignIn = () => {
           />
                     <p className='mt-4 text-center'>Don’t have an account? <span className='text-red-800'><Link to={'/signup'}>Sign Up</Link></span></p>
                 </form>
+                {errorElement}
             </div>
         </div>
     );
