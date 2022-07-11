@@ -23,9 +23,7 @@ const EditStudent = () => {
         setSchool(data.school)
         setClasses(data.classes)
         setDivison(data.divison)
-        console.log(data.divison);
         setStatus(data.status)
-        console.log(data.status);
       });
   }, []);
 
@@ -50,7 +48,7 @@ const EditStudent = () => {
   const handleForm = (e) => {
     e.preventDefault();
     const students = { name, age, date, school, classes, divison, status };
-    fetch("http://localhost:5000/students", {
+    fetch(`http://localhost:5000/student/${id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
@@ -59,7 +57,8 @@ const EditStudent = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        toast("Add Student Successfully");
+        console.log(data);
+        toast("Student Updated Successfully");
       });
   };
 
